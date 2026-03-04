@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { finalize } from 'rxjs/operators';
+import { KeycloakService } from 'keycloak-angular';
 import { ChangePasswordService } from '../../core/services/account/change-password.service';
 import { AlertService } from '../../core/services/notification/alert.service';
 
@@ -22,6 +23,7 @@ export class ChangePasswordComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly _service = inject(ChangePasswordService);
   private readonly _alert = inject(AlertService);
+  private readonly _keycloak = inject(KeycloakService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
@@ -90,9 +92,21 @@ export class ChangePasswordComponent implements OnInit {
           if (res.success) {
             this._alert.successBase(
               'Thành công',
-              'Đổi mật khẩu thành công. Bạn có thể đăng nhập lại bằng mật khẩu mới.',
+              logoutAllDevices
+                ? 'Đổi mật khẩu thành công. Đang đăng xuất, vui lòng đăng nhập lại bằng mật khẩu mới.'
+                : 'Đổi mật khẩu thành công. Bạn có thể đăng nhập lại bằng mật khẩu mới.',
             );
             this.form.reset();
+
+            if (logoutAllDevices) {
+              const redirectUri =
+                this.returnUrl && this.returnUrl !== '/'
+                  ? this.returnUrl
+                  : window.location.origin + '/account';
+              this._keycloak.logout(redirectUri);
+            } else {
+              this.navigateBack();
+            }
           } else {
             this._alert.error('Lỗi', res.message || 'Đổi mật khẩu thất bại.');
           }
@@ -104,10 +118,12 @@ export class ChangePasswordComponent implements OnInit {
   onCancel(event?: Event): void {
     event?.preventDefault();
     this.form.reset();
+    this.navigateBack();
   }
 
   // 4. Gom nhóm logic điều hướng (DRY)
   private navigateBack(): void {
+    debugger;
     if (this.returnUrl && this.returnUrl !== '/') {
       if (/^https?:\/\//.test(this.returnUrl)) {
         window.location.href = this.returnUrl;
