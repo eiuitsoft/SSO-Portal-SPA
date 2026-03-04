@@ -1,0 +1,23 @@
+#SERVICES
+services:
+  parent-management-system-spa:
+    hostname: parent-management-system-spa
+    container_name: parent-management-system-spa
+    image: itsofteiu/parent-management-system-spa:${APP_VERSION}
+    build: .
+
+    environment:
+      TZ: Asia/Ho_Chi_Minh
+      APP_API_URL: ${APP_API_URL}
+
+    restart: always
+    platform: linux/amd64
+    networks:
+      - web-net
+    ports:
+      - 1040:80
+
+#NETWORK
+networks:
+  web-net:
+    external: true
