@@ -27,6 +27,9 @@ export class ChangePasswordComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
+  /** Thời gian chờ (ms) để user đọc thông báo thành công trước khi chuyển trang. */
+  private readonly successRedirectDelayMs = 3000;
+
   submitting = false;
   private returnUrl: string = '/';
 
@@ -103,9 +106,9 @@ export class ChangePasswordComponent implements OnInit {
                 this.returnUrl && this.returnUrl !== '/'
                   ? this.returnUrl
                   : window.location.origin + '/account';
-              this._keycloak.logout(redirectUri);
+              setTimeout(() => this._keycloak.logout(redirectUri), this.successRedirectDelayMs);
             } else {
-              this.navigateBack();
+              setTimeout(() => this.navigateBack(), this.successRedirectDelayMs);
             }
           } else {
             this._alert.error('Lỗi', res.message || 'Đổi mật khẩu thất bại.');
@@ -123,7 +126,6 @@ export class ChangePasswordComponent implements OnInit {
 
   // 4. Gom nhóm logic điều hướng (DRY)
   private navigateBack(): void {
-    debugger;
     if (this.returnUrl && this.returnUrl !== '/') {
       if (/^https?:\/\//.test(this.returnUrl)) {
         window.location.href = this.returnUrl;
