@@ -24,7 +24,7 @@ export class AlertService {
       text: text,
       icon: 'success',
       showConfirmButton: false,
-      timer: 1000,
+      timer: 5000,
     });
   }
 
@@ -128,9 +128,9 @@ export class AlertService {
   successMin(title: string) {
     const toast = Swal.mixin({
       toast: true,
-      position: 'top-end',
+      position: 'bottom-end',
       showConfirmButton: false,
-      timer: 1000,
+      timer: 5000,
       timerProgressBar: true,
     });
     toast.fire({
