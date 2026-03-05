@@ -1,9 +1,9 @@
 #SERVICES
 services:
-  parent-management-system-spa:
-    hostname: parent-management-system-spa
-    container_name: parent-management-system-spa
-    image: itsofteiu/parent-management-system-spa:${APP_VERSION}
+  sso-portal-spa:
+    hostname: sso-portal-spa
+    container_name: sso-portal-spa
+    image: itsofteiu/sso-portal-spa:${APP_VERSION}
     build: .
 
     environment:
@@ -15,7 +15,7 @@ services:
     networks:
       - web-net
     ports:
-      - 1040:80
+      - 1042:80
 
 #NETWORK
 networks:

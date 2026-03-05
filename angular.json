@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "Parent-Management-System": {
+    "sso-portal": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -19,7 +19,8 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "allowedCommonJsDependencies": [
-              "sweetalert2"
+              "sweetalert2",
+              "js-sha256"
             ],
             "assets": [
               {
@@ -50,19 +51,23 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "8mb",
+                  "maximumError": "15mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "10kb",
+                  "maximumError": "14kb"
                 }
-              ],
-              "outputHashing": "all"
+              ]
             },
             "development": {
               "optimization": false,
@@ -76,10 +81,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "Parent-Management-System:build:production"
+              "buildTarget": "sso-portal:build:production"
             },
             "development": {
-              "buildTarget": "Parent-Management-System:build:development"
+              "buildTarget": "sso-portal:build:development"
             }
           },
           "defaultConfiguration": "development"

@@ -4,6 +4,6 @@ export const environment = {
   KEYCLOAK: {
     authority: 'http://10.10.53.53:8080',
     realm: 'eiu',
-    clientId: 'localhost',
+    clientId: 'sso-portal',
   },
 };

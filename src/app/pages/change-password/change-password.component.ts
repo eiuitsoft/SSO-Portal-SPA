@@ -56,18 +56,7 @@ export class ChangePasswordComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.initReturnUrl();
-  }
-
-  private initReturnUrl(): void {
-    const param = this.route.snapshot.queryParamMap.get('returnUrl');
-    if (!param) return; // Giữ nguyên '/' mặc định
-
-    try {
-      this.returnUrl = decodeURIComponent(param);
-    } catch {
-      this.returnUrl = param;
-    }
+    this._initReturnUrl();
   }
 
   private passwordMatchValidator(group: AbstractControl): ValidationErrors | null {
@@ -93,11 +82,12 @@ export class ChangePasswordComponent implements OnInit {
       .subscribe({
         next: (res) => {
           if (res.success) {
-            this._alert.successBase(
+            this._alert.success(
               'Thành công',
               logoutAllDevices
                 ? 'Đổi mật khẩu thành công. Đang đăng xuất, vui lòng đăng nhập lại bằng mật khẩu mới.'
                 : 'Đổi mật khẩu thành công. Bạn có thể đăng nhập lại bằng mật khẩu mới.',
+              4500,
             );
             this.form.reset();
 
@@ -105,10 +95,10 @@ export class ChangePasswordComponent implements OnInit {
               const redirectUri =
                 this.returnUrl && this.returnUrl !== '/'
                   ? this.returnUrl
-                  : window.location.origin + '/account';
+                  : window.location.origin + '/sso-callback';
               setTimeout(() => this._keycloak.logout(redirectUri), this.successRedirectDelayMs);
             } else {
-              setTimeout(() => this.navigateBack(), this.successRedirectDelayMs);
+              setTimeout(() => this._navigateBack(), this.successRedirectDelayMs);
             }
           } else {
             this._alert.error('Lỗi', res.message || 'Đổi mật khẩu thất bại.');
@@ -121,11 +111,21 @@ export class ChangePasswordComponent implements OnInit {
   onCancel(event?: Event): void {
     event?.preventDefault();
     this.form.reset();
-    this.navigateBack();
+    this._navigateBack();
   }
 
-  // 4. Gom nhóm logic điều hướng (DRY)
-  private navigateBack(): void {
+  private _initReturnUrl(): void {
+    const param = this.route.snapshot.queryParamMap.get('returnUrl');
+    if (!param) return; // Giữ nguyên '/' mặc định
+
+    try {
+      this.returnUrl = decodeURIComponent(param);
+    } catch {
+      this.returnUrl = param;
+    }
+  }
+
+  private _navigateBack(): void {
     if (this.returnUrl && this.returnUrl !== '/') {
       if (/^https?:\/\//.test(this.returnUrl)) {
         window.location.href = this.returnUrl;
@@ -134,7 +134,7 @@ export class ChangePasswordComponent implements OnInit {
       }
     } else {
       // Logic fallback mặc định khi không có returnUrl
-      this.router.navigate(['/account']);
+      this.router.navigate(['/sso-callback']);
     }
   }
 }

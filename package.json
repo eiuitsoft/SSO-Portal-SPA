@@ -1,12 +1,22 @@
 {
-  "name": "parent-management-system",
+  "name": "sso-portal",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "docker:menu": "node docker-menu.js",
+    "docker:build:dev": "npm run build && cross-env NODE_ENV=dev docker-compose --env-file env/.env.dev build",
+    "docker:push:dev": "docker-compose --env-file env/.env.dev push",
+    "docker:deploy:dev": "npm run docker:build:dev && npm run docker:push:dev",
+    "docker:build:uat": "npm run build && cross-env NODE_ENV=uat docker-compose --env-file env/.env.uat build",
+    "docker:push:uat": "docker-compose --env-file env/.env.uat push",
+    "docker:deploy:uat": "npm run docker:build:uat && npm run docker:push:uat",
+    "docker:build:prod": "npm run build && cross-env NODE_ENV=prod docker-compose --env-file env/.env.prod build",
+    "docker:push:prod": "docker-compose --env-file env/.env.prod push",
+    "docker:deploy:prod": "npm run docker:build:prod && npm run docker:push:prod"
   },
   "prettier": {
     "printWidth": 100,
@@ -38,6 +48,8 @@
     "keycloak-js": "^25.0.6"
   },
   "devDependencies": {
+    "chalk": "^4.1.2",
+    "cross-env": "^7.0.3",
     "@angular/build": "^20.3.7",
     "@angular/cli": "^20.3.7",
     "@angular/compiler-cli": "^20.3.0",

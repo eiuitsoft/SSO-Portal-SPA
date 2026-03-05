@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 
 export const routes: Routes = [
-  { path: 'account', component: ChangePasswordComponent },
+  { path: 'sso-callback', component: ChangePasswordComponent },
   { path: 'change-password', component: ChangePasswordComponent },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
